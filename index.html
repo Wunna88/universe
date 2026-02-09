@@ -41,7 +41,7 @@
         z-index: -10; 
     }
 
-    /* STATIC STARS (The Twinkle Layer) */
+    /* STATIC STARS */
     .galaxy-stars {
         position: absolute; top: 0; left: 0; width: 100%; height: 100%;
         z-index: -5;
@@ -54,14 +54,13 @@
         transition: opacity 3s ease-in-out;
     }
 
-    /* SHOOTING STARS CONTAINER */
+    /* SHOOTING STARS */
     .shooting-stars {
         position: absolute; top: 0; left: 0; width: 100%; height: 100%;
         z-index: -2; overflow: hidden; opacity: 0; pointer-events: none;
         transition: opacity 2s ease-in-out;
     }
 
-    /* Falling Star Shape */
     .shoot-star {
         position: absolute;
         height: 2px;
@@ -81,14 +80,14 @@
     }
     .shoot-star::after { transform: translateX(50%) rotateZ(-45deg); }
 
-    /* --- 4. TITLE & TEXT (ADJUSTED TIMING) --- */
+    /* --- 4. TITLE & TEXT (DELAYED) --- */
     .main-title { 
         position: absolute; top: 50%; left: 50%; 
         transform: translate(-50%, -50%); 
         z-index: 10; text-align: center; width: 100%; pointer-events: none; 
         opacity: 0; 
-        /* UPDATED DELAY: 5.5s (After warp slows) */
-        animation: fadeInTitle 3s ease-out forwards; animation-delay: 5.5s; 
+        /* DELAY INCREASED TO 7s */
+        animation: fadeInTitle 3s ease-out forwards; animation-delay: 7s; 
     }
     
     .main-title h1 { 
@@ -98,43 +97,31 @@
         animation: titleZoom 5s ease-out forwards;
     }
 
-    /* --- 5. ICONS (ADJUSTED TIMING) --- */
+    /* --- 5. ICONS (DELAYED) --- */
     .icon-btn {
         position: absolute; width: 80px; height: 80px;
         display: flex; justify-content: center; align-items: center;
         z-index: 20; cursor: pointer; 
-        opacity: 0; /* Hidden initially */
-        /* UPDATED DELAY: 6.5s */
-        animation: simpleFadeIn 2s ease-out forwards; animation-delay: 6.5s;
+        opacity: 0; 
+        /* DELAY INCREASED TO 8s */
+        animation: simpleFadeIn 2s ease-out forwards; animation-delay: 8s;
     }
 
     .emoji-content { 
-        font-size: 2.5rem; 
-        opacity: 0; 
-        transform: scale(0.5); 
-        transition: 0.3s; 
+        font-size: 2.5rem; opacity: 0; transform: scale(0.5); transition: 0.3s; 
         filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.3));
     }
-    
     .hint-star { 
         position: absolute; width: 8px; height: 8px; 
-        background: #ffd700; border-radius: 50%; 
-        box-shadow: 0 0 10px #ffd700; 
-        animation: hintPulse 2s infinite; 
-        transition: 0.3s; 
-        opacity: 1;
+        background: #ffd700; border-radius: 50%; box-shadow: 0 0 10px #ffd700; 
+        animation: hintPulse 2s infinite; transition: 0.3s; opacity: 1;
     }
-    
     .icon-label {
         position: absolute; top: 70px;
         font-family: 'Cinzel', serif; font-size: 0.8rem; letter-spacing: 2px; font-weight: 600; 
-        color: #ffffff; 
-        opacity: 0; 
-        pointer-events: none; text-shadow: 0 2px 5px black;
-        transition: 0.3s;
+        color: #ffffff; opacity: 0; pointer-events: none; text-shadow: 0 2px 5px black; transition: 0.3s;
     }
 
-    /* Hover Effects */
     .icon-btn:hover .emoji-content { opacity: 1; transform: scale(1.4); filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.8)); }
     .icon-btn:hover .hint-star { opacity: 0; }
     .icon-btn:hover .icon-label { opacity: 1; }
@@ -264,8 +251,8 @@
         requestAnimationFrame(animate);
     }
 
-    /* Start Slowdown at 3.5s */
-    window.onload = function() { resize(); animate(); setTimeout(() => { isSlowingDown = true; }, 3500); };
+    /* Start Slowdown at 4s */
+    window.onload = function() { resize(); animate(); setTimeout(() => { isSlowingDown = true; }, 4000); };
     window.addEventListener('resize', resize);
 
     /* --- AUDIO & EFFECTS --- */
