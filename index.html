@@ -27,21 +27,31 @@
         user-select: none;
     }
 
-    /* --- 2. WARP CANVAS --- */
+    /* --- 2. WARP CANVAS (For the Intro) --- */
     #warp-canvas {
         position: absolute; top: 0; left: 0; width: 100%; height: 100%;
         z-index: 1; mix-blend-mode: screen;
         pointer-events: none;
+        transition: opacity 2s ease; /* Fade out when music starts */
     }
 
-    /* --- 3. BACKGROUND LAYERS --- */
+    /* --- 3. SPARKLE CANVAS (For the Music Mode) --- */
+    #sparkle-canvas {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        z-index: 0; 
+        pointer-events: none;
+        opacity: 0; /* Hidden initially */
+        transition: opacity 3s ease-in; /* Fade in slowly */
+    }
+
+    /* --- 4. BACKGROUND LAYERS --- */
     .deep-bg { 
         position: absolute; width: 100%; height: 100%; 
         background: radial-gradient(ellipse at center, #050505 0%, #000000 100%); 
         z-index: -10; 
     }
 
-    /* STATIC STARS */
+    /* STATIC STARS (Always visible in background) */
     .galaxy-stars {
         position: absolute; top: 0; left: 0; width: 100%; height: 100%;
         z-index: -5; 
@@ -53,7 +63,6 @@
         background-size: 550px 550px, 350px 350px, 250px 250px, 150px 150px;
         background-position: 0 0, 40px 60px, 130px 270px, 70px 100px;
         opacity: 0.8; 
-        transition: opacity 3s ease-in-out;
     }
 
     /* SHOOTING STARS */
@@ -81,13 +90,13 @@
         box-shadow: 0 0 15px 5px rgba(255, 255, 255, 0.9), 0 0 30px 10px rgba(255, 220, 150, 0.4);
     }
 
-    /* --- 4. TITLE & TEXT --- */
+    /* --- 5. TITLE & TEXT --- */
     .main-title { 
         position: absolute; top: 50%; left: 50%; 
         transform: translate(-50%, -50%); 
         z-index: 10; text-align: center; width: 100%; pointer-events: none; 
         opacity: 0; 
-        animation: fadeInTitle 3s ease-out forwards; animation-delay: 7s; 
+        animation: fadeInTitle 3s ease-out forwards; animation-delay: 4.5s; 
     }
     
     .main-title h1 { 
@@ -97,13 +106,13 @@
         animation: titleZoom 5s ease-out forwards;
     }
 
-    /* --- 5. ICONS --- */
+    /* --- 6. ICONS --- */
     .icon-btn {
         position: absolute; width: 80px; height: 80px;
         display: flex; justify-content: center; align-items: center;
         z-index: 20; cursor: pointer; 
         opacity: 0; 
-        animation: simpleFadeIn 2s ease-out forwards; animation-delay: 8s;
+        animation: simpleFadeIn 2s ease-out forwards; animation-delay: 5.5s;
     }
 
     .emoji-content { 
@@ -127,17 +136,15 @@
 
     /* --- MUSIC ACTIVE STATES --- */
     body.music-active .shooting-stars { opacity: 1; }
-    body.music-active .galaxy-stars { opacity: 1; animation: breatheStars 4s infinite ease-in-out; }
+    /* Hide Warp Canvas when music is active to stop movement */
+    body.music-active #warp-canvas { opacity: 0; }
+    /* Show Sparkle Canvas */
+    body.music-active #sparkle-canvas { opacity: 1; }
 
     /* --- ANIMATIONS --- */
     @keyframes shooting-realistic {
         0% { transform: translateX(0) translateY(0) rotate(-45deg) scale(0.7); opacity: 1; }
         100% { transform: translateX(-800px) translateY(800px) rotate(-45deg) scale(1); opacity: 0; }
-    }
-    @keyframes breatheStars { 
-        0% { opacity: 0.8; transform: scale(1); } 
-        50% { opacity: 1; transform: scale(1.05); }
-        100% { opacity: 0.8; transform: scale(1); } 
     }
     @keyframes fadeInTitle { to { opacity: 1; } }
     @keyframes titleZoom { from { transform: scale(1.2); } to { transform: scale(1); } }
@@ -180,6 +187,7 @@
     </div>
 
     <canvas id="warp-canvas"></canvas>
+    <canvas id="sparkle-canvas"></canvas>
 
     <div class="main-title"><h1>MY UNIVERSE</h1></div>
 
@@ -195,13 +203,13 @@
         <span class="icon-label">JOURNEY</span>
     </div>
 
-    <div class="icon-btn" style="top: 30%; right: 20%;" onclick="showMemory('My Proposal', 'Will you hold my hand and walk this life with me forever?')">
+    <div class="icon-btn" style="top: 30%; right: 20%;" onclick="showMemory('My Proposal', 'In this vast universe, you are my only certainty, Babe. Will you hold my hand and walk this life with me forever?')">
         <div class="hint-star"></div>
         <span class="emoji-content">💍</span>
         <span class="icon-label">PROMISE</span>
     </div>
 
-    <div class="icon-btn" style="bottom: 25%; right: 15%;" onclick="showMemory('My Heart', 'My heart belongs to you completely. I will love you for all eternity. Happy Valentine’s Day, Babe.')">
+    <div class="icon-btn" style="bottom: 25%; right: 15%;" onclick="showMemory('My Heart', 'My heart belongs to you completely. I will love you for all eternity. Happy Valentine\'s Day, Babe.')">
         <div class="hint-star"></div>
         <span class="emoji-content">❤️</span>
         <span class="icon-label">HEART</span>
@@ -231,50 +239,104 @@
     <audio id="bg-music" loop><source src="song.mp3" type="audio/mp3"></audio>
 
 <script>
-    /* --- WARP ENGINE --- */
-    const canvas = document.getElementById('warp-canvas');
-    const ctx = canvas.getContext('2d');
-    let width, height, stars = [];
-    let speed = 25; 
-    let isSlowingDown = false;
-    let musicMode = false;
-
-    function resize() { width = window.innerWidth; height = window.innerHeight; canvas.width = width; canvas.height = height; initStars(); }
+    let width, height;
     
-    class Star {
+    function resize() { 
+        width = window.innerWidth; 
+        height = window.innerHeight; 
+        
+        warpCanvas.width = width; 
+        warpCanvas.height = height;
+        
+        sparkleCanvas.width = width; 
+        sparkleCanvas.height = height;
+        
+        initWarpStars();
+        initSparkleStars();
+    }
+
+    /* --- 1. WARP ENGINE (INTRO) --- */
+    const warpCanvas = document.getElementById('warp-canvas');
+    const warpCtx = warpCanvas.getContext('2d');
+    let warpStars = [];
+    let warpSpeed = 25; 
+
+    class WarpStar {
         constructor() { this.x = (Math.random()-0.5)*width; this.y = (Math.random()-0.5)*height; this.z = Math.random()*width; this.pz = this.z; }
         update() {
-            this.z -= speed;
+            this.z -= warpSpeed;
             if (this.z < 1) { this.z = width; this.x = (Math.random()-0.5)*width; this.y = (Math.random()-0.5)*height; this.pz = this.z; }
         }
         draw() {
             let sx = (this.x/this.z)*width + width/2; let sy = (this.y/this.z)*height + height/2;
             let px = (this.x/this.pz)*width + width/2; let py = (this.y/this.pz)*height + height/2;
             this.pz = this.z;
-            ctx.beginPath();
-            let alpha = musicMode ? 0.1 : 1; 
-            ctx.strokeStyle = `rgba(255,255,255,${alpha})`;
-            let lw = (1 - this.z/width) * (speed > 10 ? 3 : 1);
-            ctx.lineWidth = lw;
-            ctx.moveTo(px, py); ctx.lineTo(sx, sy); ctx.stroke();
+            warpCtx.beginPath();
+            warpCtx.strokeStyle = "rgba(255,255,255,0.8)";
+            let lw = (1 - this.z/width) * (warpSpeed > 10 ? 3 : 1);
+            warpCtx.lineWidth = lw;
+            warpCtx.moveTo(px, py); warpCtx.lineTo(sx, sy); warpCtx.stroke();
         }
     }
     
-    function initStars() { stars = []; for(let i=0; i<400; i++) stars.push(new Star()); }
-    
+    function initWarpStars() { warpStars = []; for(let i=0; i<400; i++) warpStars.push(new WarpStar()); }
+
+    /* --- 2. SPARKLE ENGINE (MUSIC MODE) --- */
+    const sparkleCanvas = document.getElementById('sparkle-canvas');
+    const sparkleCtx = sparkleCanvas.getContext('2d');
+    let sparkleStars = [];
+
+    class SparkleStar {
+        constructor() {
+            this.x = Math.random() * width;
+            this.y = Math.random() * height;
+            this.size = Math.random() * 2 + 0.5; 
+            this.baseAlpha = Math.random() * 0.6 + 0.1; 
+            this.twinkleOffset = Math.random() * Math.PI * 2; 
+            this.twinkleSpeed = Math.random() * 0.03 + 0.005; 
+        }
+        draw() {
+            let currentAlpha = this.baseAlpha + Math.sin(Date.now() * this.twinkleSpeed + this.twinkleOffset) * 0.3;
+            currentAlpha = Math.max(0, Math.min(1, currentAlpha));
+            sparkleCtx.beginPath();
+            sparkleCtx.fillStyle = `rgba(255, 255, 255, ${currentAlpha})`;
+            sparkleCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            sparkleCtx.fill();
+        }
+    }
+
+    function initSparkleStars() { sparkleStars = []; for(let i=0; i<600; i++) sparkleStars.push(new SparkleStar()); }
+
+    /* --- MAIN LOOP --- */
     function animate() {
-        ctx.fillStyle = "rgba(0, 0, 0, 0.4)"; ctx.fillRect(0, 0, width, height);
-        for(let s of stars) { s.update(); s.draw(); }
-        if(isSlowingDown && !musicMode && speed > 0.2) speed *= 0.96;
-        
-        // --- SPEED CONTROL: 0.8 is 5% faster drift ---
-        if(musicMode) speed = 0.8; 
-        
+        // Warp Layer
+        warpCtx.clearRect(0, 0, width, height); 
+        if(warpSpeed > 0.1) { // Only animate warp if moving
+            for(let s of warpStars) { s.update(); s.draw(); }
+        }
+
+        // Sparkle Layer
+        sparkleCtx.clearRect(0, 0, width, height);
+        for(let s of sparkleStars) { s.draw(); }
+
+        // Logic
+        if(!document.body.classList.contains('music-active')) {
+             // Intro mode: Warp slows down
+             if(warpSpeed > 0.2 && isSlowingDown) warpSpeed *= 0.96;
+        } else {
+             // Music mode: Warp stops completely
+             warpSpeed = 0;
+        }
+
         requestAnimationFrame(animate);
     }
 
-    /* Start Slowdown at 4s */
-    window.onload = function() { resize(); animate(); setTimeout(() => { isSlowingDown = true; }, 4000); };
+    let isSlowingDown = false;
+    window.onload = function() { 
+        resize(); 
+        animate(); 
+        setTimeout(() => { isSlowingDown = true; }, 3500); 
+    };
     window.addEventListener('resize', resize);
 
     /* --- AUDIO & EFFECTS --- */
@@ -290,14 +352,12 @@
                 btn.innerText = "SOUND ON";
                 btn.style.color = "#ffd700"; btn.style.borderColor = "#ffd700";
                 document.body.classList.add('music-active');
-                musicMode = true; 
             }).catch(e => console.log("Audio failed:", e));
         } else {
             audio.pause();
             btn.innerText = "SOUND OFF";
             btn.style.color = "rgba(255,255,255,0.6)"; btn.style.borderColor = "rgba(255,255,255,0.3)";
             document.body.classList.remove('music-active');
-            musicMode = false;
         }
         isPlaying = !isPlaying;
     }
