@@ -986,16 +986,15 @@
                     if (!emoji) return;
                     Actions.hoverMemory(el, emoji, title, text);
                     if (el.classList.contains('memory-btn')) {
-                        if (State.activeMobileBtn && State.activeMobileBtn !== el) {
-                            State.activeMobileBtn.classList.remove('touch-active');
-                        }
-                        State.activeMobileBtn = el;
                         el.classList.add('touch-active');
                     }
                 };
 
-                const clearHover = () => {
-                    if (!State.activeMobileBtn) Actions.hideMsg(true);
+                const clearHover = (prev) => {
+                    if (prev && prev.classList.contains('memory-btn')) {
+                        prev.classList.remove('touch-active');
+                    }
+                    Actions.hideMsg(true);
                 };
 
                 mag.addEventListener('pointerdown', (e) => {
@@ -1020,11 +1019,8 @@
 
                     const target = pickTarget(e.clientX, e.clientY);
                     if (target !== lastTarget) {
-                        if (lastTarget && lastTarget.classList.contains('memory-btn')) {
-                            lastTarget.classList.remove('touch-active');
-                        }
+                        if (lastTarget) clearHover(lastTarget);
                         if (target) activateTarget(target);
-                        else clearHover();
                         lastTarget = target;
                     }
                 });
