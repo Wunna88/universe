@@ -425,83 +425,98 @@
         
         /* Extra small devices (< 320px) */
         @media (max-width: 319px) {
-            #dynamic-text { font-size: clamp(1.1rem, 9vw, 2.2rem); }
-            .memory-btn { width: 52px; height: 52px; }
-            .zodiac-zone { width: 100px; height: 100px; }
-            .title-wrapper { width: 95%; }
-            .start-btn { font-size: 1rem; }
-            #star-counter { font-size: 0.95rem; }
-            #explore-hint { font-size: 0.7rem; padding: 0 8px; }
-            .message-box { width: 94%; padding: 24px 16px; }
+            #dynamic-text { font-size: clamp(1rem, 8vw, 1.8rem); }
+            .memory-btn { width: 44px; height: 44px; }
+            .zodiac-zone { width: 75px; height: 75px; }
+            .zodiac-label { font-size: 0.7rem; }
+            .title-wrapper { width: 95%; top: 20%; }
+            .start-btn { font-size: 0.9rem; }
+            .start-btn-positioned { top: 92%; }
+            #ui-container { bottom: calc(2% + var(--safe-bottom)); height: 8%; }
+            #star-counter { font-size: 0.75rem; margin-bottom: 4px; }
+            #explore-hint { font-size: 0.65rem; padding: 0 4px; }
+            .message-box { width: 94%; padding: 20px 14px; font-size: 0.9rem; }
+            
+            #memory-1 { top: 8%; left: 8%; }
+            #memory-2 { top: 72%; left: 18%; }
+            #memory-3 { top: 30%; left: 92%; }
+            #memory-4 { top: 75%; left: 88%; }
+            #memory-5 { top: 40%; left: 4%; }
+            #memory-6 { top: 6%; left: 80%; }
+            #zodiac-1 { top: 18%; left: 80%; }
+            #zodiac-2 { top: 68%; left: 18%; }
         }
 
         /* Small phones (320px - 479px) */
         @media (min-width: 320px) and (max-width: 479px) {
-            #dynamic-text { font-size: clamp(1.3rem, 10vw, 2.5rem); line-height: 1.1; letter-spacing: 0.01em; }
-            .memory-btn { width: 56px; height: 56px; }
-            .title-wrapper { top: 36%; width: 93%; }
-            .zodiac-zone { width: 105px; height: 105px; }
-            .start-btn { font-size: 1.2rem; }
-            .start-btn-positioned { top: 70%; }
-            #ui-container { bottom: calc(8% + var(--safe-bottom)); }
-            #star-counter { font-size: 1rem; }
-            #explore-hint { font-size: 0.76rem; letter-spacing: 0.3px; padding: 0 10px; }
-            .message-box { width: 91%; padding: 28px 18px; font-size: 0.96rem; }
+            #dynamic-text { font-size: clamp(1.2rem, 9vw, 2.2rem); line-height: 1.1; letter-spacing: 0.01em; }
+            .memory-btn { width: 48px; height: 48px; }
+            .title-wrapper { top: 25%; width: 93%; }
+            .zodiac-zone { width: 80px; height: 80px; }
+            .zodiac-label { font-size: 0.72rem; }
+            .start-btn { font-size: 1rem; }
+            .start-btn-positioned { top: 91%; }
+            #ui-container { bottom: calc(2.5% + var(--safe-bottom)); height: 8%; }
+            #star-counter { font-size: 0.85rem; margin-bottom: 3px; }
+            #explore-hint { font-size: 0.68rem; letter-spacing: 0.2px; padding: 0 6px; }
+            .message-box { width: 91%; padding: 24px 16px; font-size: 0.92rem; }
 
-            #memory-1 { top: 12%; left: 8%; }
-            #memory-2 { top: 86%; left: 18%; }
-            #memory-3 { top: 38%; left: 94%; }
-            #memory-4 { top: 88%; left: 88%; }
-            #memory-5 { top: 54%; left: 5%; }
-            #memory-6 { top: 10%; left: 80%; }
-            #zodiac-1 { top: 26%; left: 82%; }
-            #zodiac-2 { top: 80%; left: 18%; }
+            #memory-1 { top: 10%; left: 8%; }
+            #memory-2 { top: 74%; left: 18%; }
+            #memory-3 { top: 32%; left: 92%; }
+            #memory-4 { top: 76%; left: 88%; }
+            #memory-5 { top: 42%; left: 5%; }
+            #memory-6 { top: 8%; left: 80%; }
+            #zodiac-1 { top: 20%; left: 80%; }
+            #zodiac-2 { top: 70%; left: 18%; }
         }
 
         /* Medium phones (480px - 599px) */
         @media (min-width: 480px) and (max-width: 599px) {
-            #dynamic-text { font-size: clamp(1.5rem, 9vw, 2.8rem); }
-            .memory-btn { width: 60px; height: 60px; }
-            .title-wrapper { top: 37%; width: 91%; }
-            .zodiac-zone { width: 115px; height: 115px; }
-            .start-btn { font-size: 1.3rem; }
-            .start-btn-positioned { top: 69%; }
-            #ui-container { bottom: calc(9% + var(--safe-bottom)); }
-            #star-counter { font-size: 1.1rem; }
-            #explore-hint { font-size: 0.82rem; padding: 0 12px; }
-            .message-box { width: 90%; padding: 30px 20px; }
+            #dynamic-text { font-size: clamp(1.4rem, 8.5vw, 2.6rem); }
+            .memory-btn { width: 52px; height: 52px; }
+            .title-wrapper { top: 27%; width: 91%; }
+            .zodiac-zone { width: 90px; height: 90px; }
+            .zodiac-label { font-size: 0.75rem; }
+            .start-btn { font-size: 1.1rem; }
+            .start-btn-positioned { top: 90%; }
+            #ui-container { bottom: calc(3% + var(--safe-bottom)); height: 8%; }
+            #star-counter { font-size: 0.95rem; margin-bottom: 4px; }
+            #explore-hint { font-size: 0.73rem; padding: 0 8px; }
+            .message-box { width: 90%; padding: 26px 18px; font-size: 0.94rem; }
 
-            #memory-1 { top: 13%; left: 9%; }
-            #memory-2 { top: 84%; left: 20%; }
-            #memory-3 { top: 39%; left: 93%; }
-            #memory-4 { top: 87%; left: 87%; }
-            #memory-5 { top: 53%; left: 6%; }
-            #memory-6 { top: 11%; left: 79%; }
-            #zodiac-1 { top: 22%; left: 80%; }
-            #zodiac-2 { top: 82%; left: 14%; }
+            #memory-1 { top: 11%; left: 9%; }
+            #memory-2 { top: 76%; left: 20%; }
+            #memory-3 { top: 34%; left: 91%; }
+            #memory-4 { top: 78%; left: 87%; }
+            #memory-5 { top: 44%; left: 6%; }
+            #memory-6 { top: 9%; left: 79%; }
+            #zodiac-1 { top: 22%; left: 78%; }
+            #zodiac-2 { top: 72%; left: 14%; }
         }
 
         /* Large phones & small tablets (600px - 767px) */
         @media (min-width: 600px) and (max-width: 767px) {
-            #dynamic-text { font-size: clamp(1.7rem, 8vw, 3rem); white-space: normal; }
-            .memory-btn { width: 62px; height: 62px; }
-            .title-wrapper { top: 38%; width: 90%; max-width: 90vw; }
-            .zodiac-zone { width: 120px; height: 120px; }
-            .start-btn { font-size: 1.4rem; }
-            .start-btn-positioned { top: 68%; }
-            #ui-container { bottom: calc(10% + var(--safe-bottom)); }
-            #star-counter { font-size: 1.2rem; }
-            #explore-hint { font-size: 0.85rem; padding: 0 15px; }
-            .message-box { width: 89%; padding: 31px 20px; max-height: 80vh; }
+            #dynamic-text { font-size: clamp(1.6rem, 8vw, 2.9rem); white-space: normal; }
+            .memory-btn { width: 56px; height: 56px; }
+            .title-wrapper { top: 30%; width: 90%; max-width: 90vw; }
+            .zodiac-zone { width: 100px; height: 100px; }
+            .zodiac-label { font-size: 0.78rem; }
+            .start-btn { font-size: 1.2rem; }
+            .start-btn-positioned { top: 89%; }
+            #ui-container { bottom: calc(4% + var(--safe-bottom)); height: 8%; }
+            #star-counter { font-size: 1.05rem; margin-bottom: 5px; }
+            #explore-hint { font-size: 0.78rem; padding: 0 12px; }
+            .message-box { width: 89%; padding: 28px 20px; max-height: 80vh; font-size: 0.95rem; }
 
-            #memory-1 { top: 14%; left: 10%; }
-            #memory-2 { top: 82%; left: 22%; }
-            #memory-3 { top: 40%; left: 92%; }
-            #memory-4 { top: 86%; left: 86%; }
-            #memory-5 { top: 52%; left: 6%; }
-            #memory-6 { top: 12%; left: 78%; }
-            #zodiac-1 { top: 24%; left: 80%; }
-            #zodiac-2 { top: 78%; left: 16%; }
+            #memory-1 { top: 12%; left: 10%; }
+            #memory-2 { top: 74%; left: 22%; }
+            #memory-3 { top: 35%; left: 90%; }
+            #memory-4 { top: 77%; left: 86%; }
+            #memory-5 { top: 45%; left: 6%; }
+            #memory-6 { top: 10%; left: 78%; }
+            #zodiac-1 { top: 24%; left: 76%; }
+            #zodiac-2 { top: 70%; left: 16%; }
         }
 
         /* Tablets (768px - 1024px) */
