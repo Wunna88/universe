@@ -140,6 +140,24 @@
             z-index: 150; display: inline-block;
         }
 
+        .magnifier-btn {
+            position: absolute; width: 34px; height: 34px; border-radius: 50%;
+            border: 1px solid rgba(255, 215, 0, 0.6);
+            background: rgba(10, 8, 20, 0.55);
+            color: var(--gold); font-size: 1rem;
+            display: none; align-items: center; justify-content: center;
+            z-index: 160; cursor: grab; touch-action: none;
+            box-shadow: 0 0 12px rgba(255, 215, 0, 0.25), 0 0 18px rgba(255, 105, 180, 0.2);
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+        .magnifier-btn:active { cursor: grabbing; }
+
+        @media (max-width: 767px) {
+            .magnifier-btn { display: flex; }
+        }
+
         /* --- UI CONTAINER --- */
         #ui-container {
             position: fixed; bottom: calc(14% + var(--safe-bottom)); width: 100%; text-align: center;
@@ -429,9 +447,9 @@
             .memory-btn { width: 44px; height: 44px; }
             .zodiac-zone { width: 75px; height: 75px; }
             .zodiac-label { font-size: 0.7rem; }
-            .title-wrapper { width: 95%; top: 20%; }
+            .title-wrapper { width: 95%; top: 46%; }
             .start-btn { font-size: 0.9rem; }
-            .start-btn-positioned { top: 30%; }
+            .start-btn-positioned { top: 56%; }
             #ui-container { bottom: calc(1% + var(--safe-bottom)); height: 8%; }
             #star-counter { font-size: 0.75rem; margin-bottom: 4px; }
             #explore-hint { font-size: 0.65rem; padding: 0 4px; }
@@ -443,19 +461,19 @@
             #memory-4 { top: 75%; left: 88%; }
             #memory-5 { top: 40%; left: 4%; }
             #memory-6 { top: 6%; left: 80%; }
-            #zodiac-1 { top: 18%; left: 80%; }
-            #zodiac-2 { top: 68%; left: 18%; }
+            #zodiac-1 { top: 14%; left: 78%; }
+            #zodiac-2 { top: 14%; left: 22%; }
         }
 
         /* Small phones (320px - 479px) */
         @media (min-width: 320px) and (max-width: 479px) {
             #dynamic-text { font-size: clamp(1.2rem, 9vw, 2.2rem); line-height: 1.1; letter-spacing: 0.01em; }
             .memory-btn { width: 48px; height: 48px; }
-            .title-wrapper { top: 25%; width: 93%; }
+            .title-wrapper { top: 48%; width: 93%; }
             .zodiac-zone { width: 80px; height: 80px; }
             .zodiac-label { font-size: 0.72rem; }
             .start-btn { font-size: 1rem; }
-            .start-btn-positioned { top: 36%; }
+            .start-btn-positioned { top: 58%; }
             #ui-container { bottom: calc(1% + var(--safe-bottom)); height: 8%; }
             #star-counter { font-size: 0.85rem; margin-bottom: 3px; }
             #explore-hint { font-size: 0.68rem; letter-spacing: 0.2px; padding: 0 6px; }
@@ -467,19 +485,19 @@
             #memory-4 { top: 76%; left: 88%; }
             #memory-5 { top: 42%; left: 5%; }
             #memory-6 { top: 8%; left: 80%; }
-            #zodiac-1 { top: 20%; left: 80%; }
-            #zodiac-2 { top: 70%; left: 18%; }
+            #zodiac-1 { top: 14%; left: 78%; }
+            #zodiac-2 { top: 14%; left: 22%; }
         }
 
         /* Medium phones (480px - 599px) */
         @media (min-width: 480px) and (max-width: 599px) {
             #dynamic-text { font-size: clamp(1.4rem, 8.5vw, 2.6rem); }
             .memory-btn { width: 52px; height: 52px; }
-            .title-wrapper { top: 27%; width: 91%; }
+            .title-wrapper { top: 49%; width: 91%; }
             .zodiac-zone { width: 90px; height: 90px; }
             .zodiac-label { font-size: 0.75rem; }
             .start-btn { font-size: 1.1rem; }
-            .start-btn-positioned { top: 38%; }
+            .start-btn-positioned { top: 59%; }
             #ui-container { bottom: calc(2% + var(--safe-bottom)); height: 8%; }
             #star-counter { font-size: 0.95rem; margin-bottom: 4px; }
             #explore-hint { font-size: 0.73rem; padding: 0 8px; }
@@ -491,19 +509,19 @@
             #memory-4 { top: 78%; left: 87%; }
             #memory-5 { top: 44%; left: 6%; }
             #memory-6 { top: 9%; left: 79%; }
-            #zodiac-1 { top: 22%; left: 78%; }
-            #zodiac-2 { top: 72%; left: 14%; }
+            #zodiac-1 { top: 14%; left: 76%; }
+            #zodiac-2 { top: 14%; left: 24%; }
         }
 
         /* Large phones & small tablets (600px - 767px) */
         @media (min-width: 600px) and (max-width: 767px) {
             #dynamic-text { font-size: clamp(1.6rem, 8vw, 2.9rem); white-space: normal; }
             .memory-btn { width: 56px; height: 56px; }
-            .title-wrapper { top: 30%; width: 90%; max-width: 90vw; }
+            .title-wrapper { top: 50%; width: 90%; max-width: 90vw; }
             .zodiac-zone { width: 100px; height: 100px; }
             .zodiac-label { font-size: 0.78rem; }
             .start-btn { font-size: 1.2rem; }
-            .start-btn-positioned { top: 41%; }
+            .start-btn-positioned { top: 61%; }
             #ui-container { bottom: calc(2.5% + var(--safe-bottom)); height: 8%; }
             #star-counter { font-size: 1.05rem; margin-bottom: 5px; }
             #explore-hint { font-size: 0.78rem; padding: 0 12px; }
@@ -515,8 +533,8 @@
             #memory-4 { top: 77%; left: 86%; }
             #memory-5 { top: 45%; left: 6%; }
             #memory-6 { top: 10%; left: 78%; }
-            #zodiac-1 { top: 24%; left: 76%; }
-            #zodiac-2 { top: 70%; left: 16%; }
+            #zodiac-1 { top: 16%; left: 74%; }
+            #zodiac-2 { top: 16%; left: 26%; }
         }
 
         /* Tablets (768px - 1024px) */
@@ -601,6 +619,7 @@
     </div>
 
     <button id="start-btn" class="start-btn start-btn-positioned" onclick="Actions.toggleExperience()" aria-label="play" title="play">▶</button>
+    <button id="magnifier-btn" class="magnifier-btn" aria-label="magnifier" title="drag to hover">🔍</button>
 
     <div id="ui-container">
         <div id="star-counter">0 / 6 Whispers Found</div>
@@ -610,48 +629,48 @@
     <button id="reveal-btn" style="display:none;"></button>
     <audio id="bg-music" crossorigin="anonymous" preload="auto" playsinline><source src="song.mp3" type="audio/mp3"></audio>
 
-        <div class="memory-btn" id="memory-1" data-id="1"
+        <div class="memory-btn" id="memory-1" data-id="1" data-emoji="💌" data-title="The Beginning" data-text="It all began when we started talking about your name, Babe. That simple conversation became the start of my everything."
          onmouseenter="Actions.hoverMemory(this, '💌', 'The Beginning', 'It all began when we started talking about your name, Babe. That simple conversation became the start of my everything.')"
          onmouseleave="Actions.hideMsg()"
          onclick="Actions.tapMemory(this, '💌', 'The Beginning', 'It all began when we started talking about your name, Babe. That simple conversation became the start of my everything.')">
          <div class="hint-dot"></div>
     </div>
-        <div class="memory-btn" id="memory-2" data-id="2"
+        <div class="memory-btn" id="memory-2" data-id="2" data-emoji="🏎️" data-title="Our Journey" data-text="This road is ours, Babe. I want to travel by your side through every turn, until the very end of my days."
          onmouseenter="Actions.hoverMemory(this, '🏎️', 'Our Journey', 'This road is ours, Babe. I want to travel by your side through every turn, until the very end of my days.')"
          onmouseleave="Actions.hideMsg()"
          onclick="Actions.tapMemory(this, '🏎️', 'Our Journey', 'This road is ours, Babe. I want to travel by your side through every turn, until the very end of my days.')">
          <div class="hint-dot"></div>
     </div>
-        <div class="memory-btn" id="memory-3" data-id="3"
+        <div class="memory-btn" id="memory-3" data-id="3" data-emoji="💍" data-title="My Proposal" data-text="In this vast universe, you are my only certainty, Babe. Will you hold my hand and walk this life with me forever?"
          onmouseenter="Actions.hoverMemory(this, '💍', 'My Proposal', 'In this vast universe, you are my only certainty, Babe. Will you hold my hand and walk this life with me forever?')"
          onmouseleave="Actions.hideMsg()"
          onclick="Actions.tapMemory(this, '💍', 'My Proposal', 'In this vast universe, you are my only certainty, Babe. Will you hold my hand and walk this life with me forever?')">
          <div class="hint-dot"></div>
     </div>
-        <div class="memory-btn" id="memory-4" data-id="4"
+        <div class="memory-btn" id="memory-4" data-id="4" data-emoji="💗" data-title="My Heart" data-text="My heart belongs to you completely. I will love you for all eternity. Happy Valentine's Day, Babe."
          onmouseenter="Actions.hoverMemory(this, '💗', 'My Heart', 'My heart belongs to you completely. I will love you for all eternity. Happy Valentine\'s Day, Babe.')"
          onmouseleave="Actions.hideMsg()"
          onclick="Actions.tapMemory(this, '💗', 'My Heart', 'My heart belongs to you completely. I will love you for all eternity. Happy Valentine\'s Day, Babe.')">
          <div class="hint-dot"></div>
     </div>
-        <div class="memory-btn" id="memory-5" data-id="5"
+        <div class="memory-btn" id="memory-5" data-id="5" data-emoji="🌷" data-title="For You" data-text="Like tulips bloom in spring, you bring color to my world. My love for you grows brighter every day, Babe."
          onmouseenter="Actions.hoverMemory(this, '🌷', 'For You', 'Like tulips bloom in spring, you bring color to my world. My love for you grows brighter every day, Babe.')"
          onmouseleave="Actions.hideMsg()"
          onclick="Actions.tapMemory(this, '🌷', 'For You', 'Like tulips bloom in spring, you bring color to my world. My love for you grows brighter every day, Babe.')">
          <div class="hint-dot"></div>
     </div>
-        <div class="memory-btn" id="memory-6" data-id="6"
+        <div class="memory-btn" id="memory-6" data-id="6" data-emoji="🍫" data-title="Sweetness" data-text="I bought everything I thought you would love, Babe, hoping to see a smile as sweet as you are."
          onmouseenter="Actions.hoverMemory(this, '🍫', 'Sweetness', 'I bought everything I thought you would love, Babe, hoping to see a smile as sweet as you are.')"
          onmouseleave="Actions.hideMsg()"
          onclick="Actions.tapMemory(this, '🍫', 'Sweetness', 'I bought everything I thought you would love, Babe, hoping to see a smile as sweet as you are.')">
          <div class="hint-dot"></div>
     </div>
 
-        <div class="zodiac-zone" id="zodiac-1"
+        <div class="zodiac-zone" id="zodiac-1" data-emoji="♈" data-title="Your Aries" data-text="Born on April 7, 2000.<br>The soul that found its home in you."
          onmouseenter="Actions.hoverMemory(null, '♈', 'Your Aries', 'Born on April 7, 2000.<br>The soul that found its home in you.')"
          onmouseleave="Actions.hideMsg()"
          onclick="Actions.tapMemory(null, '♈', 'Your Aries', 'Born on April 7, 2000.<br>The soul that found its home in you.')"><span class="zodiac-symbol">♈</span><span class="zodiac-label">Your Aries</span></div>
-        <div class="zodiac-zone" id="zodiac-2"
+        <div class="zodiac-zone" id="zodiac-2" data-emoji="♓" data-title="My Pisces" data-text="Born on March 1, 2006.<br>The dreamer who holds my heart."
          onmouseenter="Actions.hoverMemory(null, '♓', 'My Pisces', 'Born on March 1, 2006.<br>The dreamer who holds my heart.')"
          onmouseleave="Actions.hideMsg()"
          onclick="Actions.tapMemory(null, '♓', 'My Pisces', 'Born on March 1, 2006.<br>The dreamer who holds my heart.')"><span class="zodiac-symbol">♓</span><span class="zodiac-label">My Pisces</span></div>
@@ -714,6 +733,7 @@
             activeMobileBtn: null,
             revealClicked: false,
             audioCtx: null,
+            audioSource: null,
             analyser: null,
             dataArray: null,
             pulseFactor: 1,
@@ -733,7 +753,9 @@
             progress: document.getElementById('progress-bar'),
             emoji: document.getElementById('msg-emoji'),
             msgTitle: document.getElementById('msg-title'),
-            msgBody: document.getElementById('msg-body')
+            msgBody: document.getElementById('msg-body'),
+            startBtn: document.getElementById('start-btn'),
+            magnifier: document.getElementById('magnifier-btn')
         };
 
         let w, h;
@@ -896,6 +918,7 @@
                     }
                 }, { passive: true });
                 if (DOM.audio) DOM.audio.addEventListener('ended', Actions.handleAudioEnded);
+                Actions.initMagnifier();
                 Actions.loop();
                 setTimeout(() => slowingDown = true, 3800);
                 // Schedule the requested lyric sequence (grouped) so original loop pauses while lyrics play
@@ -919,6 +942,99 @@
                 DOM.warpCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
                 DOM.univCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
                 Actions.fitTitle();
+                Actions.positionMagnifier();
+            },
+
+            positionMagnifier: () => {
+                const mag = DOM.magnifier;
+                const btn = DOM.startBtn;
+                if (!mag || !btn) return;
+                const btnRect = btn.getBoundingClientRect();
+                const magRect = mag.getBoundingClientRect();
+                const vw = window.innerWidth;
+                const vh = window.innerHeight;
+                const offset = 10;
+                let x = btnRect.right + offset;
+                let y = btnRect.top + (btnRect.height / 2) - (magRect.height / 2);
+                x = Math.min(Math.max(6, x), vw - magRect.width - 6);
+                y = Math.min(Math.max(6, y), vh - magRect.height - 6);
+                mag.style.left = x + 'px';
+                mag.style.top = y + 'px';
+                mag.style.transform = 'translate(0, 0)';
+            },
+
+            initMagnifier: () => {
+                const mag = DOM.magnifier;
+                if (!mag) return;
+                let dragging = false;
+                let offsetX = 0;
+                let offsetY = 0;
+                let lastTarget = null;
+
+                const pickTarget = (x, y) => {
+                    mag.style.pointerEvents = 'none';
+                    const el = document.elementFromPoint(x, y);
+                    mag.style.pointerEvents = '';
+                    return el ? el.closest('.memory-btn, .zodiac-zone') : null;
+                };
+
+                const activateTarget = (el) => {
+                    if (!el || !el.dataset) return;
+                    const emoji = el.dataset.emoji;
+                    const title = el.dataset.title || '';
+                    const text = el.dataset.text || '';
+                    if (!emoji) return;
+                    Actions.hoverMemory(el, emoji, title, text);
+                    if (el.classList.contains('memory-btn')) {
+                        if (State.activeMobileBtn && State.activeMobileBtn !== el) {
+                            State.activeMobileBtn.classList.remove('touch-active');
+                        }
+                        State.activeMobileBtn = el;
+                        el.classList.add('touch-active');
+                    }
+                };
+
+                const clearHover = () => {
+                    if (!State.activeMobileBtn) Actions.hideMsg(true);
+                };
+
+                mag.addEventListener('pointerdown', (e) => {
+                    dragging = true;
+                    offsetX = e.clientX - mag.getBoundingClientRect().left;
+                    offsetY = e.clientY - mag.getBoundingClientRect().top;
+                    mag.setPointerCapture(e.pointerId);
+                    e.preventDefault();
+                });
+
+                mag.addEventListener('pointermove', (e) => {
+                    if (!dragging) return;
+                    const vw = window.innerWidth;
+                    const vh = window.innerHeight;
+                    const magRect = mag.getBoundingClientRect();
+                    let x = e.clientX - offsetX;
+                    let y = e.clientY - offsetY;
+                    x = Math.min(Math.max(6, x), vw - magRect.width - 6);
+                    y = Math.min(Math.max(6, y), vh - magRect.height - 6);
+                    mag.style.left = x + 'px';
+                    mag.style.top = y + 'px';
+
+                    const target = pickTarget(e.clientX, e.clientY);
+                    if (target !== lastTarget) {
+                        if (lastTarget && lastTarget.classList.contains('memory-btn')) {
+                            lastTarget.classList.remove('touch-active');
+                        }
+                        if (target) activateTarget(target);
+                        else clearHover();
+                        lastTarget = target;
+                    }
+                });
+
+                const stopDrag = () => {
+                    dragging = false;
+                };
+
+                mag.addEventListener('pointerup', stopDrag);
+                mag.addEventListener('pointercancel', stopDrag);
             },
 
             handleAudioEnded: () => {
@@ -931,13 +1047,20 @@
                 
                 try {
                     const AudioContext = window.AudioContext || window.webkitAudioContext;
-                    State.audioCtx = new AudioContext();
-                    State.analyser = State.audioCtx.createAnalyser();
-                    State.analyser.fftSize = 64; 
-                    const src = State.audioCtx.createMediaElementSource(DOM.audio);
-                    src.connect(State.analyser);
-                    State.analyser.connect(State.audioCtx.destination);
-                    State.dataArray = new Uint8Array(State.analyser.frequencyBinCount);
+                    if (!State.audioCtx) {
+                        State.audioCtx = new AudioContext();
+                        State.analyser = State.audioCtx.createAnalyser();
+                        State.analyser.fftSize = 64; 
+                        if (!State.audioSource && DOM.audio) {
+                            State.audioSource = State.audioCtx.createMediaElementSource(DOM.audio);
+                            State.audioSource.connect(State.analyser);
+                            State.analyser.connect(State.audioCtx.destination);
+                        }
+                        State.dataArray = new Uint8Array(State.analyser.frequencyBinCount);
+                    }
+                    if (State.audioCtx && State.audioCtx.state === 'suspended') {
+                        State.audioCtx.resume().catch(() => {});
+                    }
                 } catch(e) { console.log("Audio API fallback"); }
 
                 DOM.audio.volume = 0.6;
@@ -1324,6 +1447,9 @@
                 try {
                     DOM.audio.pause();
                     if (resetElapsed) DOM.audio.currentTime = 0;
+                    if (State.audioCtx && State.audioCtx.state === 'running') {
+                        State.audioCtx.suspend().catch(() => {});
+                    }
                 } catch(e) {}
                 document.body.classList.remove('active');
             },
