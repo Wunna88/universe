@@ -273,10 +273,25 @@
         /* --- ZODIAC ZONES --- */
         .zodiac-zone {
             position: absolute; width: 140px; height: 140px;
-            z-index: 60; cursor: pointer;
+            z-index: 150; cursor: pointer;
             transform: translate(-50%, -50%);
             opacity: 0; pointer-events: none;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center;
         }
+        
+        .zodiac-zone .zodiac-symbol {
+            font-size: 3.2rem; margin-bottom: 6px; text-shadow: 0 0 15px rgba(255, 192, 203, 0.6);
+            display: block;
+        }
+        
+        .zodiac-zone .zodiac-label {
+            font-family: var(--font-body); font-size: 0.85rem; letter-spacing: 0.5px;
+            color: rgba(255, 192, 203, 0.8); font-weight: 300; text-transform: uppercase;
+            text-shadow: 0 0 8px rgba(255, 192, 203, 0.4);
+            display: block;
+        }
+        
         body.active .zodiac-zone { pointer-events: auto; }
 
         /* --- MEMORY/ZODIAC POSITIONS (DESKTOP DEFAULT) --- */
@@ -406,42 +421,32 @@
             -webkit-transform: scale(0.95);
         }
 
-        /* --- RESPONSIVE TWEAKS FOR SMALL SCREENS --- */
-        @media (max-width: 768px) {
-            #dynamic-text { font-size: clamp(1.6rem, 8vw, 3rem); white-space: normal; }
-            .title-wrapper { top: 38%; width: 92%; max-width: 92vw; }
-            .start-btn { font-size: 1.4rem; }
-            .start-btn-positioned { top: 68%; }
-            #ui-container { bottom: calc(10% + var(--safe-bottom)); }
-            .memory-btn { width: 58px; height: 58px; }
-            .message-box { width: 90%; padding: 32px 20px; max-height: 80vh; }
-            .zodiac-zone { width: 120px; height: 120px; }
-            #star-counter { font-size: 1.2rem; }
-            #explore-hint { font-size: 0.85rem; padding: 0 16px; }
-
-            /* Push memory stars away from the title on smaller screens */
-            #memory-1 { top: 14%; left: 10%; }
-            #memory-2 { top: 82%; left: 22%; }
-            #memory-3 { top: 40%; left: 92%; }
-            #memory-4 { top: 86%; left: 86%; }
-            #memory-5 { top: 52%; left: 6%; }
-            #memory-6 { top: 12%; left: 78%; }
-
-            #zodiac-1 { top: 24%; left: 84%; }
-            #zodiac-2 { top: 78%; left: 14%; }
+        /* --- RESPONSIVE DESIGN FOR ALL SCREEN SIZES --- */
+        
+        /* Extra small devices (< 320px) */
+        @media (max-width: 319px) {
+            #dynamic-text { font-size: clamp(1.1rem, 9vw, 2.2rem); }
+            .memory-btn { width: 52px; height: 52px; }
+            .zodiac-zone { width: 100px; height: 100px; }
+            .title-wrapper { width: 95%; }
+            .start-btn { font-size: 1rem; }
+            #star-counter { font-size: 0.95rem; }
+            #explore-hint { font-size: 0.7rem; padding: 0 8px; }
+            .message-box { width: 94%; padding: 24px 16px; }
         }
 
-        @media (max-width: 480px) {
-            #dynamic-text { font-size: clamp(1.4rem, 10vw, 2.6rem); line-height: 1.15; letter-spacing: 0.01em; }
-            .memory-btn { width: 64px; height: 64px; }
-            .title-wrapper { top: 36%; }
+        /* Small phones (320px - 479px) */
+        @media (min-width: 320px) and (max-width: 479px) {
+            #dynamic-text { font-size: clamp(1.3rem, 10vw, 2.5rem); line-height: 1.1; letter-spacing: 0.01em; }
+            .memory-btn { width: 56px; height: 56px; }
+            .title-wrapper { top: 36%; width: 93%; }
             .zodiac-zone { width: 105px; height: 105px; }
             .start-btn { font-size: 1.2rem; }
             .start-btn-positioned { top: 70%; }
             #ui-container { bottom: calc(8% + var(--safe-bottom)); }
-            #star-counter { font-size: 1.05rem; }
-            #explore-hint { font-size: 0.78rem; letter-spacing: 0.5px; }
-            .message-box { width: 92%; padding: 28px 18px; }
+            #star-counter { font-size: 1rem; }
+            #explore-hint { font-size: 0.76rem; letter-spacing: 0.3px; padding: 0 10px; }
+            .message-box { width: 91%; padding: 28px 18px; font-size: 0.96rem; }
 
             #memory-1 { top: 12%; left: 8%; }
             #memory-2 { top: 86%; left: 18%; }
@@ -449,9 +454,122 @@
             #memory-4 { top: 88%; left: 88%; }
             #memory-5 { top: 54%; left: 5%; }
             #memory-6 { top: 10%; left: 80%; }
+            #zodiac-1 { top: 26%; left: 82%; }
+            #zodiac-2 { top: 80%; left: 18%; }
+        }
 
-            #zodiac-1 { top: 26%; left: 88%; }
-            #zodiac-2 { top: 80%; left: 12%; }
+        /* Medium phones (480px - 599px) */
+        @media (min-width: 480px) and (max-width: 599px) {
+            #dynamic-text { font-size: clamp(1.5rem, 9vw, 2.8rem); }
+            .memory-btn { width: 60px; height: 60px; }
+            .title-wrapper { top: 37%; width: 91%; }
+            .zodiac-zone { width: 115px; height: 115px; }
+            .start-btn { font-size: 1.3rem; }
+            .start-btn-positioned { top: 69%; }
+            #ui-container { bottom: calc(9% + var(--safe-bottom)); }
+            #star-counter { font-size: 1.1rem; }
+            #explore-hint { font-size: 0.82rem; padding: 0 12px; }
+            .message-box { width: 90%; padding: 30px 20px; }
+
+            #memory-1 { top: 13%; left: 9%; }
+            #memory-2 { top: 84%; left: 20%; }
+            #memory-3 { top: 39%; left: 93%; }
+            #memory-4 { top: 87%; left: 87%; }
+            #memory-5 { top: 53%; left: 6%; }
+            #memory-6 { top: 11%; left: 79%; }
+            #zodiac-1 { top: 22%; left: 80%; }
+            #zodiac-2 { top: 82%; left: 14%; }
+        }
+
+        /* Large phones & small tablets (600px - 767px) */
+        @media (min-width: 600px) and (max-width: 767px) {
+            #dynamic-text { font-size: clamp(1.7rem, 8vw, 3rem); white-space: normal; }
+            .memory-btn { width: 62px; height: 62px; }
+            .title-wrapper { top: 38%; width: 90%; max-width: 90vw; }
+            .zodiac-zone { width: 120px; height: 120px; }
+            .start-btn { font-size: 1.4rem; }
+            .start-btn-positioned { top: 68%; }
+            #ui-container { bottom: calc(10% + var(--safe-bottom)); }
+            #star-counter { font-size: 1.2rem; }
+            #explore-hint { font-size: 0.85rem; padding: 0 15px; }
+            .message-box { width: 89%; padding: 31px 20px; max-height: 80vh; }
+
+            #memory-1 { top: 14%; left: 10%; }
+            #memory-2 { top: 82%; left: 22%; }
+            #memory-3 { top: 40%; left: 92%; }
+            #memory-4 { top: 86%; left: 86%; }
+            #memory-5 { top: 52%; left: 6%; }
+            #memory-6 { top: 12%; left: 78%; }
+            #zodiac-1 { top: 24%; left: 80%; }
+            #zodiac-2 { top: 78%; left: 16%; }
+        }
+
+        /* Tablets (768px - 1024px) */
+        @media (min-width: 768px) and (max-width: 1024px) {
+            #dynamic-text { font-size: clamp(2rem, 7vw, 3.5rem); }
+            .memory-btn { width: 65px; height: 65px; }
+            .title-wrapper { top: 40%; width: 88%; }
+            .zodiac-zone { width: 130px; height: 130px; }
+            .start-btn { font-size: 1.5rem; }
+            .start-btn-positioned { top: 65%; }
+            #ui-container { bottom: calc(12% + var(--safe-bottom)); }
+            #star-counter { font-size: 1.3rem; }
+            #explore-hint { font-size: 0.9rem; padding: 0 18px; }
+            .message-box { width: 85%; padding: 35px 25px; max-height: 80vh; }
+
+            #memory-1 { top: 15%; left: 11%; }
+            #memory-2 { top: 80%; left: 24%; }
+            #memory-3 { top: 42%; left: 91%; }
+            #memory-4 { top: 85%; left: 85%; }
+            #memory-5 { top: 51%; left: 7%; }
+            #memory-6 { top: 13%; left: 77%; }
+            #zodiac-1 { top: 22%; left: 79%; }
+            #zodiac-2 { top: 76%; left: 18%; }
+        }
+
+        /* Large tablets & small desktops (1025px - 1199px) */
+        @media (min-width: 1025px) and (max-width: 1199px) {
+            #dynamic-text { font-size: clamp(2.2rem, 6vw, 3.7rem); }
+            .memory-btn { width: 68px; height: 68px; }
+            .title-wrapper { top: 42%; }
+            .zodiac-zone { width: 140px; height: 140px; }
+            .start-btn { font-size: 1.6rem; }
+            .start-btn-positioned { top: 63%; }
+            #ui-container { bottom: calc(13% + var(--safe-bottom)); }
+            #star-counter { font-size: 1.35rem; }
+            #explore-hint { font-size: 0.92rem; }
+            .message-box { width: 83%; padding: 38px 28px; }
+        }
+
+        /* Large desktops (1200px+) */
+        @media (min-width: 1200px) {
+            #dynamic-text { font-size: clamp(2.5rem, 5.5vw, 4rem); }
+            .memory-btn { width: 70px; height: 70px; }
+            .title-wrapper { top: 45%; }
+            .zodiac-zone { width: 145px; height: 145px; }
+            .start-btn { font-size: 1.7rem; }
+            #star-counter { font-size: 1.4rem; }
+            #explore-hint { font-size: 0.95rem; }
+            .message-box { width: 80%; padding: 40px 30px; }
+        }
+
+        /* Landscape orientation tweaks */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .title-wrapper { top: 35%; }
+            .start-btn-positioned { top: 55%; }
+            #ui-container { bottom: calc(4% + var(--safe-bottom)); }
+            #dynamic-text { font-size: clamp(1rem, 4vw, 2rem); }
+            .memory-btn { width: 48px; height: 48px; }
+            .zodiac-zone { width: 95px; height: 95px; }
+            .message-box { max-height: 85vh; padding: 25px 18px; }
+        }
+
+        /* iPad landscape support */
+        @media (min-width: 1024px) and (max-height: 600px) and (orientation: landscape) {
+            .title-wrapper { top: 38%; }
+            #dynamic-text { font-size: clamp(1.8rem, 5vw, 3rem); }
+            .start-btn-positioned { top: 58%; }
+            #ui-container { bottom: calc(6% + var(--safe-bottom)); }
         }
     </style>
 </head>
@@ -517,11 +635,11 @@
         <div class="zodiac-zone" id="zodiac-1"
          onmouseenter="Actions.hoverMemory(null, '♈', 'Your Aries', 'Born on April 7, 2000.<br>The soul that found its home in you.')"
          onmouseleave="Actions.hideMsg()"
-         onclick="Actions.tapMemory(null, '♈', 'Your Aries', 'Born on April 7, 2000.<br>The soul that found its home in you.')"></div>
+         onclick="Actions.tapMemory(null, '♈', 'Your Aries', 'Born on April 7, 2000.<br>The soul that found its home in you.')"><span class="zodiac-symbol">♈</span><span class="zodiac-label">Your Aries</span></div>
         <div class="zodiac-zone" id="zodiac-2"
          onmouseenter="Actions.hoverMemory(null, '♓', 'My Pisces', 'Born on March 1, 2006.<br>The dreamer who holds my heart.')"
          onmouseleave="Actions.hideMsg()"
-         onclick="Actions.tapMemory(null, '♓', 'My Pisces', 'Born on March 1, 2006.<br>The dreamer who holds my heart.')"></div>
+         onclick="Actions.tapMemory(null, '♓', 'My Pisces', 'Born on March 1, 2006.<br>The dreamer who holds my heart.')"><span class="zodiac-symbol">♓</span><span class="zodiac-label">My Pisces</span></div>
 
     <div class="message-box" id="msg-box">
         <div class="msg-header"><span class="msg-emoji" id="msg-emoji">✨</span></div>
