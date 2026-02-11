@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta property="og:title" content="My Universe">
     <meta property="og:description" content="A space dedicated to us. ♾️">
     <meta property="og:image" content="preview.png">
@@ -10,6 +11,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400&family=Lora:ital,wght@1,400;1,500&display=swap" rel="stylesheet">
 
     <style>
+        /* 
+         * BROWSER COMPATIBILITY NOTES:
+         * - Tested on Chrome, Firefox, Safari (iOS/macOS), Edge
+         * - Webkit prefixes for iOS Safari and older Chrome
+         * - Touch events + mouse events for desktop/mobile
+         * - visualViewport API with fallback for older browsers
+         * - WebAudio API with webkit prefix for Safari
+         * - Safe area insets for notched devices
+         * - Hardware acceleration via will-change and transform
+         */
+        
         /* --- 1. DESIGN SYSTEM --- */
         :root { 
             --gold: #ffd700; 
@@ -27,12 +39,29 @@
             --font-body: 'Lato', sans-serif;
         }
 
+        :root {
+            --safe-top: env(safe-area-inset-top, 0px);
+            --safe-right: env(safe-area-inset-right, 0px);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+            --safe-left: env(safe-area-inset-left, 0px);
+        }
+
         html, body {
             margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden;
             background-color: var(--space-edge); 
             font-family: var(--font-body);
             color: var(--white); display: flex; justify-content: center; align-items: center;
-            user-select: none; -webkit-tap-highlight-color: transparent;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none; 
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            -ms-touch-action: manipulation;
+        }
+
+        @supports (height: 100dvh) {
+            html, body { height: 100dvh; }
         }
 
         canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
@@ -50,7 +79,8 @@
         .title-wrapper {
             position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%);
             z-index: 100; text-align: center; width: 90%; opacity: 1; 
-            animation: fade-in 3s forwards 1s; 
+            animation: fade-in 3s forwards 1s;
+            -webkit-animation: fade-in 3s forwards 1s;
             cursor: pointer; /* Clickable */
         }
 
@@ -82,6 +112,7 @@
         .click-arrow {
             font-size: 1.5rem; color: var(--gold);
             animation: bounce 2s infinite;
+            -webkit-animation: bounce 2s infinite;
             margin-bottom: 5px;
             text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
         }
@@ -99,6 +130,10 @@
             font-size: 1.6rem; font-weight: 600; line-height: 1;
             background: transparent; color: var(--rose-gold);
             box-shadow: none; transition: none; pointer-events: auto;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            outline: none;
         }
         .start-btn-positioned {
             position: absolute; top: 62%; left: 50%; transform: translate(-50%, 0);
@@ -107,7 +142,7 @@
 
         /* --- UI CONTAINER --- */
         #ui-container {
-            position: fixed; bottom: 14%; width: 100%; text-align: center;
+            position: fixed; bottom: calc(14% + var(--safe-bottom)); width: 100%; text-align: center;
             z-index: 90; pointer-events: none; opacity: 0;
             transition: opacity 2s;
         }
@@ -116,12 +151,18 @@
             font-family: var(--font-display); 
             font-size: 1.4rem; color: var(--gold); font-style: italic;
             margin-bottom: 12px; text-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
-            transition: all 0.5s;
+            transition: opacity 1.2s ease, transform 0.4s ease;
         }
 
         #star-counter.complete {
             color: var(--love-pink); text-shadow: 0 0 20px var(--love-pink);
-            font-size: 1.6rem; animation: pulse-hint 2s infinite;
+            font-size: 1.6rem; 
+            animation: pulse-hint 1.6s infinite;
+            -webkit-animation: pulse-hint 1.6s infinite;
+        }
+
+        #star-counter.hidden {
+            opacity: 0; visibility: hidden;
         }
 
         #explore-hint {
@@ -129,24 +170,31 @@
             font-size: 0.9rem; letter-spacing: 1px; font-weight: 300;
             color: var(--rose-gold); 
             text-shadow: 0 0 10px rgba(255, 105, 180, 0.3);
-            transition: opacity 0.5s, transform 0.3s;
-            pointer-events: none; 
+            transition: opacity 0.5s ease, transform 0.3s ease;
+            pointer-events: none;
         }
 
         #explore-hint.active-trigger {
-            pointer-events: auto; cursor: pointer;
+            pointer-events: auto;
+            cursor: default;
             text-shadow: 0 0 15px var(--love-pink);
         }
-        #explore-hint.active-trigger:hover { transform: scale(1.05); color: var(--white); }
 
         .click-span {
             text-decoration: underline; text-underline-offset: 4px;
             font-weight: 400; margin-left: 6px; color: var(--gold);
+            cursor: pointer;
+            transition: color 0.3s ease, transform 0.2s ease;
+            display: inline-block;
+        }
+        .click-span:hover {
+            color: var(--white);
+            transform: scale(1.05);
         }
 
         /* --- PROGRESS BAR --- */
         #progress-container {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: 4px;
+            position: fixed; bottom: var(--safe-bottom); left: 0; width: 100%; height: 4px;
             background: rgba(255, 255, 255, 0.05); z-index: 100; opacity: 0; transition: opacity 1s;
         }
         #progress-bar {
@@ -161,14 +209,28 @@
             justify-content: center; align-items: center; z-index: 80;
             cursor: pointer; touch-action: manipulation;
             opacity: 0; transition: opacity 3s;
-            pointer-events: none; 
+            pointer-events: none;
+            transform: translate(-50%, -50%);
         }
 
         body.active .memory-btn { opacity: 0.6; pointer-events: auto; }
 
         /* Highlight memory buttons when the explore hint is clicked */
-        body.highlight-mem .memory-btn { opacity: 1; transform: scale(1.08); transition: transform 0.25s ease, opacity 0.25s ease; }
-        body.highlight-mem .hint-dot { width: 10px; height: 10px; box-shadow: 0 0 22px var(--love-pink), 0 0 40px var(--gold); }
+        body.highlight-mem .memory-btn { 
+            opacity: 1; 
+            -webkit-transform: translate(-50%, -50%) scale(1.08);
+            -ms-transform: translate(-50%, -50%) scale(1.08);
+            transform: translate(-50%, -50%) scale(1.08); 
+            -webkit-transition: transform 0.25s ease, opacity 0.25s ease;
+            transition: transform 0.25s ease, opacity 0.25s ease;
+            will-change: transform, opacity;
+        }
+        body.highlight-mem .hint-dot { 
+            width: 10px; 
+            height: 10px; 
+            box-shadow: 0 0 22px var(--love-pink), 0 0 40px var(--gold);
+            will-change: width, height, box-shadow;
+        }
 
         .hint-dot { 
             position: absolute; 
@@ -185,18 +247,27 @@
             100% { transform: scale(1); opacity: 0.7; box-shadow: 0 0 5px #fff; }
         }
 
-        .memory-btn:nth-child(1) .hint-dot { animation: star-pulse 4s infinite ease-in-out 0s; }
-        .memory-btn:nth-child(2) .hint-dot { animation: star-pulse 5s infinite ease-in-out 1.5s; }
-        .memory-btn:nth-child(3) .hint-dot { animation: star-pulse 4.5s infinite ease-in-out 3s; }
-        .memory-btn:nth-child(4) .hint-dot { animation: star-pulse 6s infinite ease-in-out 0.5s; }
-        .memory-btn:nth-child(5) .hint-dot { animation: star-pulse 5.5s infinite ease-in-out 2.5s; }
-        .memory-btn:nth-child(6) .hint-dot { animation: star-pulse 7s infinite ease-in-out 4s; }
+        @-webkit-keyframes star-pulse {
+            0% { -webkit-transform: scale(1); opacity: 0.7; box-shadow: 0 0 5px #fff; }
+            50% { -webkit-transform: scale(1.6); opacity: 1; box-shadow: 0 0 20px var(--gold), 0 0 30px var(--love-pink); }
+            100% { -webkit-transform: scale(1); opacity: 0.7; box-shadow: 0 0 5px #fff; }
+        }
+
+        .memory-btn:nth-child(1) .hint-dot { animation: star-pulse 4s infinite ease-in-out 0s; -webkit-animation: star-pulse 4s infinite ease-in-out 0s; }
+        .memory-btn:nth-child(2) .hint-dot { animation: star-pulse 5s infinite ease-in-out 1.5s; -webkit-animation: star-pulse 5s infinite ease-in-out 1.5s; }
+        .memory-btn:nth-child(3) .hint-dot { animation: star-pulse 4.5s infinite ease-in-out 3s; -webkit-animation: star-pulse 4.5s infinite ease-in-out 3s; }
+        .memory-btn:nth-child(4) .hint-dot { animation: star-pulse 6s infinite ease-in-out 0.5s; -webkit-animation: star-pulse 6s infinite ease-in-out 0.5s; }
+        .memory-btn:nth-child(5) .hint-dot { animation: star-pulse 5.5s infinite ease-in-out 2.5s; -webkit-animation: star-pulse 5.5s infinite ease-in-out 2.5s; }
+        .memory-btn:nth-child(6) .hint-dot { animation: star-pulse 7s infinite ease-in-out 4s; -webkit-animation: star-pulse 7s infinite ease-in-out 4s; }
 
         .memory-btn:hover .hint-dot, .memory-btn.touch-active .hint-dot { 
             background: var(--rose-gold); width: 8px; height: 8px;
             box-shadow: 0 0 18px var(--love-pink), 0 0 30px var(--gold); 
-            transform: scale(1.4); opacity: 1;
+            transform: scale(1.4); 
+            -webkit-transform: scale(1.4);
+            opacity: 1;
             animation: none; 
+            -webkit-animation: none;
         }
 
         /* --- ZODIAC ZONES --- */
@@ -208,9 +279,23 @@
         }
         body.active .zodiac-zone { pointer-events: auto; }
 
+        /* --- MEMORY/ZODIAC POSITIONS (DESKTOP DEFAULT) --- */
+        #memory-1 { top: 18%; left: 12%; }
+        #memory-2 { top: 75%; left: 25%; }
+        #memory-3 { top: 45%; left: 88%; }
+        #memory-4 { top: 80%; left: 80%; }
+        #memory-5 { top: 50%; left: 8%; }
+        #memory-6 { top: 15%; left: 75%; }
+
+        #zodiac-1 { top: 20%; left: 78%; }
+        #zodiac-2 { top: 75%; left: 18%; }
+
         /* --- CARD STYLING --- */
         .message-box { 
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.95);
+            position: fixed; top: 50%; left: 50%; 
+            -webkit-transform: translate(-50%, -50%) scale(0.95);
+            -ms-transform: translate(-50%, -50%) scale(0.95);
+            transform: translate(-50%, -50%) scale(0.95);
             width: 85%; max-width: 360px; padding: 40px 25px; 
             background: var(--glass-bg);
             backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
@@ -220,11 +305,32 @@
             z-index: 200; 
             opacity: 0; pointer-events: none; 
             transition: all 0.3s ease; 
-            max-height: 85vh; overflow-y: auto;
-            scrollbar-width: thin; scrollbar-color: var(--rose-gold) transparent;
+            max-height: 82vh; overflow-y: auto; 
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin; 
+            scrollbar-color: var(--rose-gold) transparent;
         }
 
-        .message-box.visible { opacity: 1; transform: translate(-50%, -50%) scale(1); pointer-events: auto; }
+        .message-box::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .message-box::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .message-box::-webkit-scrollbar-thumb {
+            background: var(--rose-gold);
+            border-radius: 3px;
+        }
+
+        .message-box.visible { 
+            opacity: 1; 
+            -webkit-transform: translate(-50%, -50%) scale(1);
+            -ms-transform: translate(-50%, -50%) scale(1);
+            transform: translate(-50%, -50%) scale(1); 
+            pointer-events: auto; 
+        }
 
         .msg-header { margin-bottom: 12px; }
         .msg-emoji { display: block; font-size: 2.5rem; margin-bottom: 8px; filter: drop-shadow(0 0 20px rgba(255,105,180,0.4)); }
@@ -254,6 +360,10 @@
             font-family: var(--font-body); 
             font-size: 0.9rem;
             cursor: pointer; transition: 0.3s;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            outline: none;
         }
         .modal-close-btn:hover { background: rgba(255, 255, 255, 0.1); box-shadow: 0 0 10px var(--rose-gold); }
 
@@ -274,9 +384,75 @@
         body.active .title-wrapper { pointer-events: none; z-index: 50; transform: translate(-50%, -50%) scale(0.98); transition: transform 0.2s ease; }
 
         @keyframes fade-in { to { opacity: 1; } }
+        @-webkit-keyframes fade-in { to { opacity: 1; } }
+        
         @keyframes pulse-hint { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.8; } }
-        @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-6px); } 60% { transform: translateY(-3px); } }
-        .text-fade-out { opacity: 0 !important; transform: scale(0.95); }
+        @-webkit-keyframes pulse-hint { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.8; } }
+        
+        @keyframes bounce { 
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 
+            40% { transform: translateY(-6px); } 
+            60% { transform: translateY(-3px); } 
+        }
+        @-webkit-keyframes bounce { 
+            0%, 20%, 50%, 80%, 100% { -webkit-transform: translateY(0); } 
+            40% { -webkit-transform: translateY(-6px); } 
+            60% { -webkit-transform: translateY(-3px); } 
+        }
+        
+        .text-fade-out { 
+            opacity: 0 !important; 
+            transform: scale(0.95);
+            -webkit-transform: scale(0.95);
+        }
+
+        /* --- RESPONSIVE TWEAKS FOR SMALL SCREENS --- */
+        @media (max-width: 768px) {
+            #dynamic-text { font-size: clamp(1.6rem, 8vw, 3rem); white-space: normal; }
+            .title-wrapper { top: 38%; width: 92%; max-width: 92vw; }
+            .start-btn { font-size: 1.4rem; }
+            .start-btn-positioned { top: 68%; }
+            #ui-container { bottom: calc(10% + var(--safe-bottom)); }
+            .memory-btn { width: 58px; height: 58px; }
+            .message-box { width: 90%; padding: 32px 20px; max-height: 80vh; }
+            .zodiac-zone { width: 120px; height: 120px; }
+            #star-counter { font-size: 1.2rem; }
+            #explore-hint { font-size: 0.85rem; padding: 0 16px; }
+
+            /* Push memory stars away from the title on smaller screens */
+            #memory-1 { top: 14%; left: 10%; }
+            #memory-2 { top: 82%; left: 22%; }
+            #memory-3 { top: 40%; left: 92%; }
+            #memory-4 { top: 86%; left: 86%; }
+            #memory-5 { top: 52%; left: 6%; }
+            #memory-6 { top: 12%; left: 78%; }
+
+            #zodiac-1 { top: 24%; left: 84%; }
+            #zodiac-2 { top: 78%; left: 14%; }
+        }
+
+        @media (max-width: 480px) {
+            #dynamic-text { font-size: clamp(1.4rem, 10vw, 2.6rem); line-height: 1.15; letter-spacing: 0.01em; }
+            .memory-btn { width: 64px; height: 64px; }
+            .title-wrapper { top: 36%; }
+            .zodiac-zone { width: 105px; height: 105px; }
+            .start-btn { font-size: 1.2rem; }
+            .start-btn-positioned { top: 70%; }
+            #ui-container { bottom: calc(8% + var(--safe-bottom)); }
+            #star-counter { font-size: 1.05rem; }
+            #explore-hint { font-size: 0.78rem; letter-spacing: 0.5px; }
+            .message-box { width: 92%; padding: 28px 18px; }
+
+            #memory-1 { top: 12%; left: 8%; }
+            #memory-2 { top: 86%; left: 18%; }
+            #memory-3 { top: 38%; left: 94%; }
+            #memory-4 { top: 88%; left: 88%; }
+            #memory-5 { top: 54%; left: 5%; }
+            #memory-6 { top: 10%; left: 80%; }
+
+            #zodiac-1 { top: 26%; left: 88%; }
+            #zodiac-2 { top: 80%; left: 12%; }
+        }
     </style>
 </head>
 <body>
@@ -295,54 +471,54 @@
 
     <div id="ui-container">
         <div id="star-counter">0 / 6 Whispers Found</div>
-        <div id="explore-hint" onclick="Actions.handleHintClick()">The stars hold my secrets... find them.</div>
+        <div id="explore-hint">The stars hold my secrets... find them.</div>
     </div>
 
     <button id="reveal-btn" style="display:none;"></button>
-    <audio id="bg-music" crossorigin="anonymous" preload="auto"><source src="song.mp3" type="audio/mp3"></audio>
+    <audio id="bg-music" crossorigin="anonymous" preload="auto" playsinline><source src="song.mp3" type="audio/mp3"></audio>
 
-    <div class="memory-btn" style="top:18%; left:12%;" data-id="1"
+        <div class="memory-btn" id="memory-1" data-id="1"
          onmouseenter="Actions.hoverMemory(this, '💌', 'The Beginning', 'It all began when we started talking about your name, Babe. That simple conversation became the start of my everything.')"
          onmouseleave="Actions.hideMsg()"
          onclick="Actions.tapMemory(this, '💌', 'The Beginning', 'It all began when we started talking about your name, Babe. That simple conversation became the start of my everything.')">
          <div class="hint-dot"></div>
     </div>
-    <div class="memory-btn" style="top:75%; left:25%;" data-id="2"
+        <div class="memory-btn" id="memory-2" data-id="2"
          onmouseenter="Actions.hoverMemory(this, '🏎️', 'Our Journey', 'This road is ours, Babe. I want to travel by your side through every turn, until the very end of my days.')"
          onmouseleave="Actions.hideMsg()"
          onclick="Actions.tapMemory(this, '🏎️', 'Our Journey', 'This road is ours, Babe. I want to travel by your side through every turn, until the very end of my days.')">
          <div class="hint-dot"></div>
     </div>
-    <div class="memory-btn" style="top:45%; right:12%;" data-id="3"
+        <div class="memory-btn" id="memory-3" data-id="3"
          onmouseenter="Actions.hoverMemory(this, '💍', 'My Proposal', 'In this vast universe, you are my only certainty, Babe. Will you hold my hand and walk this life with me forever?')"
          onmouseleave="Actions.hideMsg()"
          onclick="Actions.tapMemory(this, '💍', 'My Proposal', 'In this vast universe, you are my only certainty, Babe. Will you hold my hand and walk this life with me forever?')">
          <div class="hint-dot"></div>
     </div>
-    <div class="memory-btn" style="bottom:20%; right:20%;" data-id="4"
+        <div class="memory-btn" id="memory-4" data-id="4"
          onmouseenter="Actions.hoverMemory(this, '💗', 'My Heart', 'My heart belongs to you completely. I will love you for all eternity. Happy Valentine\'s Day, Babe.')"
          onmouseleave="Actions.hideMsg()"
          onclick="Actions.tapMemory(this, '💗', 'My Heart', 'My heart belongs to you completely. I will love you for all eternity. Happy Valentine\'s Day, Babe.')">
          <div class="hint-dot"></div>
     </div>
-    <div class="memory-btn" style="top:50%; left:8%;" data-id="5"
+        <div class="memory-btn" id="memory-5" data-id="5"
          onmouseenter="Actions.hoverMemory(this, '🌷', 'For You', 'Like tulips bloom in spring, you bring color to my world. My love for you grows brighter every day, Babe.')"
          onmouseleave="Actions.hideMsg()"
          onclick="Actions.tapMemory(this, '🌷', 'For You', 'Like tulips bloom in spring, you bring color to my world. My love for you grows brighter every day, Babe.')">
          <div class="hint-dot"></div>
     </div>
-    <div class="memory-btn" style="top:15%; right:25%;" data-id="6"
+        <div class="memory-btn" id="memory-6" data-id="6"
          onmouseenter="Actions.hoverMemory(this, '🍫', 'Sweetness', 'I bought everything I thought you would love, Babe, hoping to see a smile as sweet as you are.')"
          onmouseleave="Actions.hideMsg()"
          onclick="Actions.tapMemory(this, '🍫', 'Sweetness', 'I bought everything I thought you would love, Babe, hoping to see a smile as sweet as you are.')">
          <div class="hint-dot"></div>
     </div>
 
-    <div class="zodiac-zone" style="top:20%; left:78%;"
+        <div class="zodiac-zone" id="zodiac-1"
          onmouseenter="Actions.hoverMemory(null, '♈', 'Your Aries', 'Born on April 7, 2000.<br>The soul that found its home in you.')"
          onmouseleave="Actions.hideMsg()"
          onclick="Actions.tapMemory(null, '♈', 'Your Aries', 'Born on April 7, 2000.<br>The soul that found its home in you.')"></div>
-    <div class="zodiac-zone" style="top:75%; left:18%;"
+        <div class="zodiac-zone" id="zodiac-2"
          onmouseenter="Actions.hoverMemory(null, '♓', 'My Pisces', 'Born on March 1, 2006.<br>The dreamer who holds my heart.')"
          onmouseleave="Actions.hideMsg()"
          onclick="Actions.tapMemory(null, '♓', 'My Pisces', 'Born on March 1, 2006.<br>The dreamer who holds my heart.')"></div>
@@ -366,7 +542,7 @@
             },
             phrases: [
                 "My Universe",
-                "Soe Wunna Htun ♾️ Wutt Hmone Shwe Yi",
+                "Soe Wunna Htun ∞ Wutt Hmone Shwe Yi",
                 "It's you, my love",
                 "You are my little universe",
                 "My heart beats only for you",
@@ -403,10 +579,12 @@
             foundStars: new Set(),
             isAllFound: false,
             activeMobileBtn: null,
+            revealClicked: false,
             audioCtx: null,
             analyser: null,
             dataArray: null,
-            pulseFactor: 1
+            pulseFactor: 1,
+            _completeTimer: null
         };
 
         const DOM = {
@@ -535,6 +713,42 @@
         }
 
         const Actions = {
+            // Monotonic elapsed time in ms, prefers audio clock when playing
+            getElapsedMs: () => {
+                const audio = DOM.audio;
+                if (State.isPlaying && audio && !isNaN(audio.currentTime) && audio.currentTime > 0) {
+                    return audio.currentTime * 1000;
+                }
+                if (State.basePerfStart) {
+                    return performance.now() - State.basePerfStart;
+                }
+                return State.elapsedBeforePause || 0;
+            },
+
+            setPlayButtonState: (playing) => {
+                const btn = document.getElementById('start-btn');
+                if (!btn) return;
+                if (playing) {
+                    btn.innerHTML = '⏸';
+                    btn.setAttribute('aria-label', 'pause');
+                    btn.title = 'pause';
+                } else {
+                    btn.innerHTML = '▶';
+                    btn.setAttribute('aria-label', 'play');
+                    btn.title = 'play';
+                }
+            },
+
+            setTitleSmooth: (text, fadeMs = 220) => {
+                if (!DOM.title) return;
+                DOM.title.classList.add('text-fade-out');
+                setTimeout(() => {
+                    DOM.title.innerHTML = text;
+                    Actions.fitTitle();
+                    DOM.title.classList.remove('text-fade-out');
+                }, fadeMs);
+            },
+
             init: () => {
                 Actions.resize();
                 for(let i=0; i<250; i++) warpStars.push(new WarpStar());
@@ -542,28 +756,41 @@
                 for(let i=0; i<3; i++) neonShooters.push(new NeonShooter());
                 for(let i=0; i<5; i++) smallMeteors.push(new SmallMeteor());
 
-                window.addEventListener('resize', Actions.resize);
+                window.addEventListener('resize', Actions.resize, { passive: true });
                 window.addEventListener('touchstart', (e) => {
                     if (State.activeMobileBtn && !e.target.closest('.memory-btn') && !e.target.closest('.message-box')) {
-                        Actions.hideMsg();
+                        Actions.hideMsg(true);
                     }
-                });
+                }, { passive: true });
+                if (DOM.audio) DOM.audio.addEventListener('ended', Actions.handleAudioEnded);
                 Actions.loop();
                 setTimeout(() => slowingDown = true, 3800);
                 // Schedule the requested lyric sequence (grouped) so original loop pauses while lyrics play
                 Actions.scheduleLyricSequence([
                     { offsetMs: 73600, text: 'ကော်ဖီတစ်ခွက်ရယ်', durationMs: 2000 },
-                    { offsetMs: 77000, text: 'ကဗျာစာအုပ်ရယ်', durationMs: 2600 },
-                    { offsetMs: 78000, text: 'ကိုယ်လေမင်းနဲ့', durationMs: 3200 },
+                    { offsetMs: 77000, text: 'ကဗျာစာအုပ်ရယ်', durationMs: 2400 },
+                    { offsetMs: 78000, text: 'ကိုယ်လေမင်းနဲ့', durationMs: 3100 },
                     { offsetMs: 83500, text: 'အတူတူရှိမယ်...', durationMs: 2800 }
                 ]);
             },
 
             resize: () => {
-                w = window.innerWidth; h = window.innerHeight;
-                DOM.warpC.width = DOM.univC.width = w;
-                DOM.warpC.height = DOM.univC.height = h;
+                const viewport = window.visualViewport;
+                w = Math.round(viewport ? viewport.width : window.innerWidth);
+                h = Math.round(viewport ? viewport.height : window.innerHeight);
+                const dpr = Math.max(window.devicePixelRatio || 1, 1);
+                DOM.warpC.style.width = DOM.univC.style.width = w + 'px';
+                DOM.warpC.style.height = DOM.univC.style.height = h + 'px';
+                DOM.warpC.width = DOM.univC.width = Math.floor(w * dpr);
+                DOM.warpC.height = DOM.univC.height = Math.floor(h * dpr);
+                DOM.warpCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                DOM.univCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
                 Actions.fitTitle();
+            },
+
+            handleAudioEnded: () => {
+                Actions.stopExperience({ resetElapsed: true });
+                Actions.setPlayButtonState(false);
             },
 
             startExperience: () => {
@@ -584,13 +811,10 @@
                 DOM.audio.play().catch(() => console.log("Visuals started without audio"));
 
                 State.isPlaying = true;
-                // resume from paused elapsed if present
-                if (State.elapsedBeforePause && State.elapsedBeforePause > 0) {
-                    State.startTime = Date.now() - State.elapsedBeforePause;
-                } else {
-                    State.startTime = Date.now();
-                    State.elapsedBeforePause = 0;
-                }
+                const resumed = State.elapsedBeforePause && State.elapsedBeforePause > 0;
+                State.basePerfStart = performance.now() - (resumed ? State.elapsedBeforePause : 0);
+                State.startTime = State.basePerfStart; // legacy support
+                if (!resumed) State.elapsedBeforePause = 0;
                 document.body.classList.add('active');
                 warpSpeed = 0; 
 
@@ -599,20 +823,6 @@
                 // (Re)schedule any queued lyrics for this run
                 Actions._rescheduleLyrics();
 
-                State.progressInterval = setInterval(() => {
-                    if(!State.isPlaying) return;
-                    const elapsed = Date.now() - State.startTime;
-                    const remaining = CONFIG.totalDuration - elapsed;
-                    DOM.progress.style.width = Math.min((elapsed / CONFIG.totalDuration) * 100, 100) + "%";
-
-                    if (remaining <= CONFIG.revealTime && !State.isAllFound) {
-                        if (!DOM.hint.classList.contains('active-trigger')) {
-                            DOM.hint.innerHTML = "Reveal the promises I have for you, they are waiting...<span class='click-span'>click here</span>";
-                            DOM.hint.classList.add('active-trigger');
-                        }
-                    }
-                    if (elapsed >= CONFIG.totalDuration) location.reload();
-                }, 100);
             },
 
             cycleText: () => {
@@ -672,7 +882,7 @@
 
             tapMemory: (el, emoji, title, text) => {
                 if (State.activeMobileBtn === el) {
-                    Actions.hideMsg();
+                    Actions.hideMsg(true);
                 } else {
                     if (State.activeMobileBtn) State.activeMobileBtn.classList.remove('touch-active');
                     State.activeMobileBtn = el;
@@ -681,24 +891,41 @@
                 }
             },
 
-            hideMsg: () => {
-                if (State.activeMobileBtn) return;
+            hideMsg: (force = false) => {
+                if (State.activeMobileBtn && !force) return;
                 DOM.msgBox.classList.remove('visible');
-                if(!State.isAllFound) DOM.hint.style.opacity = '1';
-            },
-
-            handleHintClick: () => {
-                if (DOM.hint.classList.contains('active-trigger')) {
-                    Actions.boostMemories();
+                if(!State.isAllFound && !State.revealClicked) DOM.hint.style.opacity = '1';
+                if (force && State.activeMobileBtn) {
+                    State.activeMobileBtn.classList.remove('touch-active');
+                    State.activeMobileBtn = null;
                 }
             },
 
+            handleHintClick: () => {
+                Actions.boostMemories();
+                // Hide the hint message after clicking and mark as clicked
+                State.revealClicked = true;
+                DOM.hint.style.opacity = '0';
+                DOM.hint.style.pointerEvents = 'none';
+            },
+
             boostMemories: () => {
+                // Don't highlight if all stars are already found
+                if (State.isAllFound) return;
+                
                 // Make memory buttons more noticeable when user clicks the hint
                 document.body.classList.add('highlight-mem');
+                
+                // Clear any existing highlight timeout
+                if (State._highlightTimeout) {
+                    clearTimeout(State._highlightTimeout);
+                }
+                
                 // keep highlight until user interacts with a memory or after a timeout
                 const clearAfter = 15000; // 15s
-                const tid = setTimeout(() => { document.body.classList.remove('highlight-mem'); }, clearAfter);
+                const tid = setTimeout(() => { 
+                    document.body.classList.remove('highlight-mem'); 
+                }, clearAfter);
                 // store so we could clear if needed
                 State._highlightTimeout = tid;
             },
@@ -708,21 +935,52 @@
                     State.isAllFound = true;
                     DOM.counter.innerHTML = "✨ You found all my hidden words. Well done, my love. ✨";
                     DOM.counter.classList.add('complete');
-                    DOM.hint.style.display = 'none';
+                    DOM.hint.style.display = 'default';
+                    
+                    // Reset reveal state: remove highlight and clear timeout
+                    document.body.classList.remove('highlight-mem');
+                    if (State._highlightTimeout) {
+                        clearTimeout(State._highlightTimeout);
+                        State._highlightTimeout = null;
+                    }
+                    
+                    // Hide the reveal hint text
+                    if (!DOM.hint.classList.contains('active-trigger')) {
+                        DOM.hint.style.opacity = '0';
+                        DOM.hint.style.pointerEvents = 'none';
+                    }
+                    
+                    if (State._completeTimer) return;
+                    State._completeTimer = setTimeout(() => {
+                        DOM.counter.classList.remove('complete');
+                        DOM.counter.classList.add('hidden');
+                        State._completeTimer = null;
+                    }, 9000);
                 } else {
+                    if (State._completeTimer) {
+                        clearTimeout(State._completeTimer);
+                        State._completeTimer = null;
+                    }
+                    DOM.counter.classList.remove('hidden');
                     DOM.counter.innerHTML = `${State.foundStars.size} / ${CONFIG.totalStars} Whispers Found`;
+                    
+                    // Restore hint visibility if not in active-trigger state and reveal not clicked
+                    if (!DOM.hint.classList.contains('active-trigger') && !State.revealClicked) {
+                        DOM.hint.style.opacity = '1';
+                        DOM.hint.style.pointerEvents = 'auto';
+                    }
                 }
             },
 
             revealAll: () => {
                 const storyHTML = `
                     <div style="font-size: 1.05rem; line-height: 1.9; padding: 0 5px;">
-                        <div class="story-block"><span class="story-title">💌 The Beginning</span>It all began when we started talking about your name, Babe. That simple conversation became the start of my everything.</div>
-                        <div class="story-block"><span class="story-title">🏎️ Our Journey</span>This road is ours, Babe. I want to travel by your side through every turn, until the very end of my days.</div>
-                        <div class="story-block"><span class="story-title">💍 My Proposal</span>In this vast universe, you are my only certainty, Babe. Will you hold my hand and walk this life with me forever?</div>
-                        <div class="story-block"><span class="story-title">💗 My Heart</span>My heart belongs to you completely. I will love you for all eternity. Happy Valentine's Day, Babe.</div>
-                        <div class="story-block"><span class="story-title">🌷 For You</span>Like tulips bloom in spring, you bring color to my world. My love for you grows brighter every day, Babe.</div>
-                        <div class="story-block"><span class="story-title">🍫 Sweetness</span>I bought everything I thought you would love, Babe, hoping to see a smile as sweet as you are.</div>
+                        <div class="story-block"><span class="story-title">💌 The Beginning</span>It all began when we started talking about your name, Babe. <br>That simple conversation became the start of my everything.</div>
+                        <div class="story-block"><span class="story-title">🏎️ Our Journey</span>This road is ours, Babe. <br>I want to travel by your side through every turn,<br> until the very end of my days.</div>
+                        <div class="story-block"><span class="story-title">💍 My Proposal</span>In this vast universe, you are my only certainty, Babe. <br>Will you hold my hand and walk this life with me forever?</div>
+                        <div class="story-block"><span class="story-title">💗 My Heart</span>My heart belongs to you completely. I will love you for all eternity. <br>Happy Valentine's Day, Babe.</div>
+                        <div class="story-block"><span class="story-title">🌷 For You</span>Like tulips bloom in spring, you bring color to my world. <br>My love for you grows brighter every day, Babe.</div>
+                        <div class="story-block"><span class="story-title">🍫 Sweetness</span>I bought everything I thought you would love, Babe,<br>hoping to see a smile as sweet as you are.</div>
                         <div style="text-align:center; margin-top:30px;">
                             <button class="modal-close-btn" onclick="Actions.forceClose()">Close</button>
                         </div>
@@ -758,7 +1016,7 @@
             // Internal: schedule a single entry based on current startTime
             _scheduleLyricEntry: (entry) => {
                 if (!entry) return;
-                const elapsed = Date.now() - State.startTime;
+                const elapsed = Actions.getElapsedMs();
                 const timeUntil = entry.offsetMs - elapsed;
                 // if the lyric time already passed but still within duration, show immediately for remaining time
                 if (timeUntil <= 0 && timeUntil + entry.durationMs > 0) {
@@ -773,7 +1031,7 @@
             _scheduleSequenceEntry: (seq) => {
                 if (!seq || !seq.entries || !seq.entries.length) return;
                 const startOffset = seq.entries[0].offsetMs;
-                const elapsed = Date.now() - State.startTime;
+                const elapsed = Actions.getElapsedMs();
                 const timeUntil = startOffset - elapsed;
                 const startDelay = 1000; // additional delay before sequence begins (ms)
                 if (timeUntil <= 0) {
@@ -802,6 +1060,7 @@
                 const interGap = 1000;
                 // run entries sequentially starting at seq.entries[0].offsetMs
                 const seqStart = seq.entries[0].offsetMs;
+                const runBase = Actions.getElapsedMs();
                 let cursor = 0; // relative time from sequence start
                 seq.entries.forEach((entry, idx) => {
                     const showTime = cursor; // ms after seq start
@@ -810,21 +1069,19 @@
                     // schedule fade-out before showing the lyric
                     const fadeId = setTimeout(() => {
                         if (DOM.title) DOM.title.classList.add('text-fade-out');
-                    }, absFadeStart - (Date.now() - State.startTime));
+                    }, Math.max(0, absFadeStart - runBase));
                     State.sequenceTimers.push(fadeId);
 
                     // schedule showing the lyric (fade-in after replacing text)
                     const showId = setTimeout(() => {
-                        DOM.title.innerHTML = entry.text;
-                        Actions.fitTitle();
-                        if (DOM.title) DOM.title.classList.remove('text-fade-out');
-                    }, seqStart + showTime - (Date.now() - State.startTime));
+                        Actions.setTitleSmooth(entry.text, 180);
+                    }, Math.max(0, seqStart + showTime - runBase));
                     State.sequenceTimers.push(showId);
 
                     // schedule fade-out at the end of this lyric display
                     const endFadeId = setTimeout(() => {
                         if (DOM.title) DOM.title.classList.add('text-fade-out');
-                    }, seqStart + showTime + entry.durationMs - (Date.now() - State.startTime));
+                    }, Math.max(0, seqStart + showTime + entry.durationMs - runBase));
                     State.sequenceTimers.push(endFadeId);
 
                         // If last entry, restore saved phrase after fadeDur and resume loop (with extra pause)
@@ -832,15 +1089,14 @@
                             const resumeDelay = 1000; // extra pause before resuming loop (ms)
                             const restoreId = setTimeout(() => {
                                 const idxSaved = (typeof State._savedPhraseIndex === 'number') ? State._savedPhraseIndex : 0;
-                                DOM.title.innerHTML = CONFIG.phrases[idxSaved] || CONFIG.phrases[0];
-                                Actions.fitTitle();
-                                if (DOM.title) DOM.title.classList.remove('text-fade-out');
+                                const nextText = CONFIG.phrases[idxSaved] || CONFIG.phrases[0];
+                                Actions.setTitleSmooth(nextText, 200);
                                 // small delay before restarting the cycle so it doesn't feel rushed
                                 setTimeout(() => {
                                     State.inLyricSequence = false;
                                     if (State.isPlaying) Actions.cycleText();
                                 }, resumeDelay);
-                            }, seqStart + showTime + entry.durationMs + fadeDur - (Date.now() - State.startTime));
+                            }, Math.max(0, seqStart + showTime + entry.durationMs + fadeDur - runBase));
                             State.sequenceTimers.push(restoreId);
                         }
 
@@ -860,15 +1116,13 @@
                 // Save the current phrase index so we can restore the correct loop phrase
                 State._savedPhraseIndex = typeof phraseIndex === 'number' ? phraseIndex : 0;
 
-                DOM.title.innerHTML = entry.text;
-                Actions.fitTitle();
+                Actions.setTitleSmooth(entry.text, 160);
 
                 // schedule revert after duration
                 const revertId = setTimeout(() => {
                     // restore loop phrase by index to avoid restoring previous temporary text
                     const idx = (typeof State._savedPhraseIndex === 'number') ? State._savedPhraseIndex : 0;
-                    DOM.title.innerHTML = CONFIG.phrases[idx] || CONFIG.phrases[0];
-                    Actions.fitTitle();
+                    Actions.setTitleSmooth(CONFIG.phrases[idx] || CONFIG.phrases[0], 180);
                     // resume the normal cycle if still playing
                     if (State.isPlaying) Actions.cycleText();
                     // clear saved index once reverted
@@ -908,42 +1162,46 @@
                 }
             },
 
-            stopExperience: () => {
-                if (!State.isPlaying) return;
-                // record elapsed so we can resume later
-                State.elapsedBeforePause = Date.now() - State.startTime;
+            stopExperience: (opts = {}) => {
+                const { resetElapsed = false } = opts;
+                if (!State.isPlaying && !resetElapsed) return;
+                const elapsedToStore = resetElapsed ? 0 : Actions.getElapsedMs();
+                State.elapsedBeforePause = elapsedToStore;
                 State.isPlaying = false;
-                if (State.progressInterval) { clearInterval(State.progressInterval); State.progressInterval = null; }
-                // Clear pending title timers so the loop stops immediately
                 if (State.cycleTimer) { clearTimeout(State.cycleTimer); State.cycleTimer = null; }
                 if (State.fadeTimer) { clearTimeout(State.fadeTimer); State.fadeTimer = null; }
-                // ensure title isn't mid-fade
-                if (DOM.title) DOM.title.classList.remove('text-fade-out');
-                // Clear any scheduled lyric timers so they don't show while paused
+                if (DOM.title) {
+                    DOM.title.classList.remove('text-fade-out');
+                    if (resetElapsed) {
+                        phraseIndex = 0;
+                        State._savedPhraseIndex = null;
+                        DOM.title.innerHTML = CONFIG.phrases[0];
+                        Actions.fitTitle();
+                    }
+                }
                 if (State.lyricTimers && State.lyricTimers.length) {
                     State.lyricTimers.forEach(id => clearTimeout(id));
                     State.lyricTimers = [];
                 }
-                try { DOM.audio.pause(); } catch(e) {}
+                if (State.sequenceTimers && State.sequenceTimers.length) {
+                    State.sequenceTimers.forEach(id => clearTimeout(id));
+                    State.sequenceTimers = [];
+                }
+                if (resetElapsed && DOM.progress) DOM.progress.style.width = '0%';
+                try {
+                    DOM.audio.pause();
+                    if (resetElapsed) DOM.audio.currentTime = 0;
+                } catch(e) {}
                 document.body.classList.remove('active');
             },
 
             toggleExperience: () => {
-                const btn = document.getElementById('start-btn');
                 if (State.isPlaying) {
                     Actions.stopExperience();
-                    if (btn) {
-                        btn.innerHTML = '▶';
-                        btn.setAttribute('aria-label', 'play');
-                        btn.title = 'play';
-                    }
+                    Actions.setPlayButtonState(false);
                 } else {
                     Actions.startExperience();
-                    if (btn) {
-                        btn.innerHTML = '⏸';
-                        btn.setAttribute('aria-label', 'pause');
-                        btn.title = 'pause';
-                    }
+                    Actions.setPlayButtonState(true);
                 }
             },
 
@@ -969,6 +1227,18 @@
                     smallMeteors.forEach(m => { m.update(); m.draw(); });
                     neonShooters.forEach(s => { s.update(); s.draw(); });
                     Actions.drawConstellations();
+
+                    const elapsed = Actions.getElapsedMs();
+                    const remaining = CONFIG.totalDuration - elapsed;
+                    DOM.progress.style.width = Math.min((elapsed / CONFIG.totalDuration) * 100, 100) + "%";
+
+                    if (remaining <= CONFIG.revealTime && !State.isAllFound) {
+                        if (!DOM.hint.classList.contains('active-trigger')) {
+                            DOM.hint.innerHTML = "Reveal the promises I have for you..<span class='click-span' onclick='Actions.handleHintClick()'>click here</span>";
+                            DOM.hint.classList.add('active-trigger');
+                        }
+                    }
+                    if (elapsed >= CONFIG.totalDuration) location.reload();
                 }
 
                 requestAnimationFrame(Actions.loop);
